@@ -2,7 +2,7 @@
 
 <div align="center">
   <img src="https://img.shields.io/badge/Product%20Design-Finance%20AI-blue.svg" alt="Product Design">
-  <img src="img.shields.io/badge/Multi-Agent-Architecture-green.svg" alt="Multi-Agent">
+  <img src="https://img.shields.io/badge/Multi-Agent-Architecture-green.svg" alt="Multi-Agent">
   <img src="https://img.shields.io/badge/E-commerce-Profit%20Analytics-orange.svg" alt="E-commerce">
 </div>
 
