@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>电商利润智能分析 - 产品原型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .page { display: none; }
+        .page.active { display: block; }
+        .progress-bar { transition: width 0.5s ease-in-out; }
+        .chat-message { margin-bottom: 12px; }
+        .agent-badge { background: #3b82f6; }
+        .user-badge { background: #10b981; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+        .transition-all { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-chart-line text-blue-600 text-2xl mr-3"></i>
+                    <span class="font-bold text-xl text-gray-900">电商利润智能分析平台</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-500">财务AI产品原型</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面指示器 -->
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex space-x-1 py-2">
+                <button onclick="goToPage('home')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-home">
+                    <i class="fas fa-home mr-1"></i>首页
+                </button>
+                <button onclick="goToPage('upload')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-upload">
+                    <i class="fas fa-upload mr-1"></i>上传数据
+                </button>
+                <button onclick="goToPage('progress')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-progress">
+                    <i class="fas fa-spinner mr-1"></i>分析进度
+                </button>
+                <button onclick="goToPage('report')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-report">
+                    <i class="fas fa-file-alt mr-1"></i>诊断报告
+                </button>
+                <button onclick="goToPage('chat')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-chat">
+                    <i class="fas fa-comments mr-1"></i>智能问答
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 首页 -->
+        <div id="home" class="page active">
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-8 mb-8 text-white">
+                <h1 class="text-4xl font-bold mb-4">电商利润智能分析平台</h1>
+                <p class="text-lg opacity-90 mb-6">基于多Agent AI的自动化利润诊断与经营建议系统</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                        <i class="fas fa-robot text-3xl mb-2"></i>
+                        <h3 class="font-semibold text-lg">多Agent分工协作</h3>
+                        <p class="text-sm opacity-80">从数据清洗到经营建议，全流程自动化</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                        <i class="fas fa-brain text-3xl mb-2"></i>
+                        <h3 class="font-semibold text-lg">财务专家知识嵌入</h3>
+                        <p class="text-sm opacity-80">内置专业财务核算规则，准确率高</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                        <i class="fas fa-lightbulb text-3xl mb-2"></i>
+                        <h3 class="font-semibold text-lg">可执行经营建议</h3>
+                        <p class="text-sm opacity-80">不止于分析，直接给出行动方案</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900">产品定位</h2>
+                    <p class="text-gray-700 mb-4">
+                        针对多平台电商卖家，自动化完成每日利润核算，智能识别亏损异常点，给出可落地的经营优化建议，替代80%的人工财务分析工作。
+                    </p>
+                    <div class="space-y-2">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">解决多平台数据口径不一问题</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">每日自动出报，节省财务人力</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">AI识别异常，提前发现经营风险</span>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-600">自然语言问答，管理层快速获取信息</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900">系统架构</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center p-3 bg-blue-50 rounded border-l-4 border-blue-500">
+                            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-3">1</div>
+                            <div>
+                                <span class="font-semibold">数据归集Agent</span>
+                                <p class="text-sm text-gray-600">字段标准化 + 数据清洗</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-green-50 rounded border-l-4 border-green-500">
+                            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center text-white font-bold mr-3">2</div>
+                            <div>
+                                <span class="font-semibold">利润核算Agent</span>
+                                <p class="text-sm text-gray-600">按SKU维度核算净利润</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-yellow-50 rounded border-l-4 border-yellow-500">
+                            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold mr-3">3</div>
+                            <div>
+                                <span class="font-semibold">异常识别Agent</span>
+                                <p class="text-sm text-gray-600">识别亏损/高退款/广告吞噬利润</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-purple-50 rounded border-l-4 border-purple-500">
+                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold mr-3">4</div>
+                            <div>
+                                <span class="font-semibold">经营建议Agent</span>
+                                <p class="text-sm text-gray-600">输出调价/投放/清退建议</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-3 bg-red-50 rounded border-l-4 border-red-500">
+                            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white font-bold mr-3">5</div>
+                            <div>
+                                <span class="font-semibold">管理层问答Agent</span>
+                                <p class="text-sm text-gray-600">自然语言交互解答经营问题</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6 mb-8">
+                <h2 class="text-2xl font-bold mb-4 text-gray-900">目标用户</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border border-gray-200 rounded-lg p-4 card-hover transition-all">
+                        <i class="fas fa-store text-4xl text-orange-500 mb-2"></i>
+                        <h3 class="font-semibold text-lg">日销百万级卖家</h3>
+                        <p class="text-sm text-gray-600">多平台多SKU，人工核算来不及，需要每日快速出结果</p>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4 card-hover transition-all">
+                        <i class="fas fa-users text-4xl text-blue-500 mb-2"></i>
+                        <h3 class="font-semibold text-lg">电商运营管理层</h3>
+                        <p class="text-sm text-gray-600">不需要看明细，只关注异常和决策建议</p>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4 card-hover transition-all">
+                        <i class="fas fa-calculator text-4xl text-green-500 mb-2"></i>
+                        <h3 class="font-semibold text-lg">电商财务团队</h3>
+                        <p class="text-sm text-gray-600">减少重复性核算工作，聚焦例外管理</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button onclick="goToPage('upload')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-all inline-flex items-center">
+                    开始使用 <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 上传数据页面 -->
+        <div id="upload" class="page">
+            <h1 class="text-3xl font-bold mb-6 text-gray-900">数据上传</h1>
+            <p class="text-gray-600 mb-8">支持多平台数据批量上传，系统会自动识别并匹配字段口径</p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">选择数据文件</h2>
+
+                        <div id="file-list" class="space-y-3 mb-6">
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer" id="drop-area">
+                                <i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-3"></i>
+                                <p class="text-gray-500 mb-2">拖拽文件到此处，或点击选择</p>
+                                <p class="text-sm text-gray-400">支持格式：.xlsx .csv</p>
+                                <input type="file" id="file-input" multiple class="hidden">
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <p class="text-sm text-gray-500 mb-3">已选择的数据文件：</p>
+                            <div id="selected-files" class="space-y-2">
+                                <p class="text-sm text-gray-400 italic">暂无文件</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mt-6">
+                        <h2 class="text-xl font-semibold mb-4">分摊规则配置</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">平台服务费分摊方式</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option>按SKU销售收入占比分摊</option>
+                                    <option>按SKU成交笔数分摊</option>
+                                    <option>不分摊，保留在平台层面</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">固定费用分摊周期</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option>按自然月分摊</option>
+                                    <option>按自然周分摊</option>
+                                    <option>不分摊，全部计入当期</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">广告费用归属</label>
+                                <select class="w-full border border-gray-300 rounded-md px-3 py-2">
+                                    <option>归属于具体SKU</option>
+                                    <option>按点击分配到SKU</option>
+                                    <option>作为整体营销费用</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-semibold mb-4">需要上传的数据</h2>
+                        <div class="space-y-3">
+                            <div class="flex items-start">
+                                <i class="fas fa-check-square text-green-500 mt-1 mr-2 w-5"></i>
+                                <div>
+                                    <span class="font-medium">订单明细表</span>
+                                    <p class="text-sm text-gray-600">订单号、SKU、数量、成交价、下单时间、平台</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-square text-green-500 mt-1 mr-2 w-5"></i>
+                                <div>
+                                    <span class="font-medium">退款明细表</span>
+                                    <p class="text-sm text-gray-600">退款订单、退款金额、退款原因、退款时间</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-square text-green-500 mt-1 mr-2 w-5"></i>
+                                <div>
+                                    <span class="font-medium">广告投放数据</span>
+                                    <p class="text-sm text-gray-600">日期、平台、计划名称、消耗金额、点击量</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-square text-green-500 mt-1 mr-2 w-5"></i>
+                                <div>
+                                    <span class="font-medium">费用数据</span>
+                                    <p class="text-sm text-gray-600">平台服务费、仓储费、物流费、其他固定费用</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-check-square text-green-500 mt-1 mr-2 w-5"></i>
+                                <div>
+                                    <span class="font-medium">商品成本表</span>
+                                    <p class="text-sm text-gray-600">SKU、标准成本、采购价</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-blue-50 rounded">
+                            <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                            <span class="text-sm text-blue-700">系统支持表头智能匹配，即使列名和模板不一致也能识别</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <button onclick="goToPage('home')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all">
+                    <i class="fas fa-arrow-left mr-2"></i> 返回首页
+                </button>
+                <button onclick="startAnalysis()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded-lg transition-all">
+                    开始AI分析 <i class="fas fa-play ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 分析进度页面 -->
+        <div id="progress" class="page">
+            <h1 class="text-3xl font-bold mb-6 text-gray-900">AI分析进行中</h1>
+            <div class="bg-white rounded-lg shadow p-8 max-w-3xl mx-auto">
+                <div class="mb-6">
+                    <div class="flex justify-between text-sm font-medium text-gray-700 mb-2">
+                        <span>总体进度</span>
+                        <span id="progress-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div id="progress-bar" class="progress-bar bg-blue-600 h-4 rounded-full w-0"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-4" id="agent-steps">
+                    <div class="flex items-center opacity-50" id="step-1">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between">
+                                <span class="font-medium">数据归集Agent处理中</span>
+                                <span class="text-sm text-gray-500">等待中</span>
+                            </div>
+                            <p class="text-sm text-gray-500">字段标准化、数据清洗、缺失值检查</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center opacity-50" id="step-2">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between">
+                                <span class="font-medium">利润核算Agent处理中</span>
+                                <span class="text-sm text-gray-500">等待中</span>
+                            </div>
+                            <p class="text-sm text-gray-500">收入确认、成本匹配、费用分摊、SKU利润计算</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center opacity-50" id="step-3">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between">
+                                <span class="font-medium">异常识别Agent处理中</span>
+                                <span class="text-sm text-gray-500">等待中</span>
+                            </div>
+                            <p class="text-sm text-gray-500">识别亏损SKU、高退款商品、广告吞噬利润</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center opacity-50" id="step-4">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between">
+                                <span class="font-medium">经营建议Agent生成中</span>
+                                <span class="text-sm text-gray-500">等待中</span>
+                            </div>
+                            <p class="text-sm text-gray-500">调价、投放优化、SKU清退建议</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center opacity-50" id="step-5">
+                        <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3">
+                            <i class="fas fa-check text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between">
+                                <span class="font-medium">诊断报告生成中</span>
+                                <span class="text-sm text-gray-500">等待中</span>
+                            </div>
+                            <p class="text-sm text-gray-500">汇总结果、生成可视化报表</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 p-4 bg-blue-50 rounded-lg hidden" id="completion-box">
+                    <div class="flex items-center text-green-700">
+                        <i class="fas fa-check-circle text-2xl mr-3"></i>
+                        <div>
+                            <p class="font-bold text-lg">分析完成！</p>
+                            <p class="text-sm">所有Agent处理完毕，诊断报告已生成</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-end hidden" id="progress-next-btn">
+                    <button onclick="goToPage('report')" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-8 rounded-lg transition-all">
+                        查看报告 <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 诊断报告页面 -->
+        <div id="report" class="page">
+            <h1 class="text-3xl font-bold mb-6 text-gray-900">利润诊断报告</h1>
+
+            <!-- 摘要卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-lg shadow p-5">
+                    <p class="text-sm text-gray-500 mb-1">总销售收入</p>
+                    <p class="text-2xl font-bold text-gray-900">1,258,640.50</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-5">
+                    <p class="text-sm text-gray-500 mb-1">总成本费用</p>
+                    <p class="text-2xl font-bold text-red-600">987,234.12</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-5">
+                    <p class="text-sm text-gray-500 mb-1">净利润</p>
+                    <p class="text-2xl font-bold text-green-600">271,406.38</p>
+                </div>
+                <div class="bg-white rounded-lg shadow p-5">
+                    <p class="text-sm text-gray-500 mb-1">销售净利润率</p>
+                    <p class="text-2xl font-bold text-blue-600">21.56%</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- 左侧异常清单 -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                            异常识别清单
+                        </h2>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm">
+                                <thead>
+                                    <tr class="border-b">
+                                        <th class="text-left py-2 px-1">SKU</th>
+                                        <th class="text-right py-2 px-1">销量</th>
+                                        <th class="text-right py-2 px-1">收入</th>
+                                        <th class="text-right py-2 px-1">净利润</th>
+                                        <th class="text-left py-2 px-1">异常类型</th>
+                                        <th class="text-left py-2 px-1">优先级</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b bg-red-50">
+                                        <td class="py-3 px-1 font-medium">SKU-089</td>
+                                        <td class="text-right py-3 px-1">1,204</td>
+                                        <td class="text-right py-3 px-1">86,688</td>
+                                        <td class="text-right py-3 px-1 text-red-600">-12,890</td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">持续亏损</span></td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-red-600 text-white rounded text-xs">高</span></td>
+                                    </tr>
+                                    <tr class="border-b bg-red-50">
+                                        <td class="py-3 px-1 font-medium">SKU-215</td>
+                                        <td class="text-right py-3 px-1">3,520</td>
+                                        <td class="text-right py-3 px-1">105,600</td>
+                                        <td class="text-right py-3 px-1 text-red-600">-3,850</td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-red-100 text-red-800 rounded text-xs">高销低毛利</span></td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-red-600 text-white rounded text-xs">高</span></td>
+                                    </tr>
+                                    <tr class="border-b bg-yellow-50">
+                                        <td class="py-3 px-1 font-medium">SKU-102</td>
+                                        <td class="text-right py-3 px-1">856</td>
+                                        <td class="text-right py-3 px-1">62,488</td>
+                                        <td class="text-right py-3 px-1 text-red-600">-2,156</td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">广告吞噬利润</span></td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-yellow-500 text-white rounded text-xs">高</span></td>
+                                    </tr>
+                                    <tr class="border-b bg-yellow-50">
+                                        <td class="py-3 px-1 font-medium">SKU-045</td>
+                                        <td class="text-right py-3 px-1">432</td>
+                                        <td class="text-right py-3 px-1">38,880</td>
+                                        <td class="text-right py-3 px-1 text-green-600">4,280</td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">高退款率</span></td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-yellow-500 text-white rounded text-xs">中</span></td>
+                                    </tr>
+                                    <tr class="border-b bg-yellow-50">
+                                        <td class="py-3 px-1 font-medium">SKU-078</td>
+                                        <td class="text-right py-3 px-1">1,250</td>
+                                        <td class="text-right py-3 px-1">62,500</td>
+                                        <td class="text-right py-3 px-1 text-red-600">-1,250</td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs>库存积压</span></td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-yellow-500 text-white rounded text-xs">中</span></td>
+                                    </tr>
+                                    <tr class="border-b bg-yellow-50">
+                                        <td class="py-3 px-1 font-medium">SKU-188</td>
+                                        <td class="text-right py-3 px-1">880</td>
+                                        <td class="text-right py-3 px-1">52,800</td>
+                                        <td class="text-right py-3 px-1 text-red-600">-880</td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs">活动不盈利</span></td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-yellow-500 text-white rounded text-xs">中</span></td>
+                                    </tr>
+                                    <tr class="border-b bg-orange-50">
+                                        <td class="py-3 px-1 font-medium">SKU-156</td>
+                                        <td class="text-right py-3 px-1">678</td>
+                                        <td class="text-right py-3 px-1">45,250</td>
+                                        <td class="text-right py-3 px-1 text-red-600">-890</td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-orange-100 text-orange-800 rounded text-xs">物流成本过高</span></td>
+                                        <td class="py-3 px-1"><span class="px-2 py-1 bg-orange-500 text-white rounded text-xs">低</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mt-6">
+                        <h2 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-lightbulb text-green-500 mr-2"></i>
+                            AI生成经营建议
+                        </h2>
+                        <div class="space-y-4">
+                            <div class="p-4 border border-red-200 rounded-lg bg-red-50">
+                                <div class="font-semibold text-red-800 mb-2">
+                                    <i class="fas fa-times-circle mr-2"></i>建议立即处理：SKU-089清退
+                                </div>
+                                <p class="text-sm text-red-700">
+                                    该SKU连续14天亏损，累计亏损12,890元，毛利率为-14.87%，无论从短期还是长期看都没有盈利前景，建议立即停售清库存。
+                                </p>
+                                <div class="mt-2 text-sm text-red-700">
+                                    <strong>预期收益：</strong>停止销售后，预计每月可减少亏损约12,000元
+                                </div>
+                            </div>
+                            <div class="p-4 border border-red-200 rounded-lg bg-red-50">
+                                <div class="font-semibold text-red-800 mb-2">
+                                    <i class="fas fa-dollar-sign mr-2"></i>建议立即调价：SKU-215提价
+                                </div>
+                                <p class="text-sm text-red-700">
+                                    该SKU销量很大（月销3,520件）但毛利率仅3.65%，扣除广告和平台费后亏损3,850元，属于"赚销量不赚钱"。建议：
+                                </p>
+                                <ul class="list-disc ml-5 mt-1 text-sm text-red-700">
+                                    <li>提价5-8元（约提升售价3%）</li>
+                                    <li>如果无法提价，需要谈判降低采购成本至少2元/件</li>
+                                    <li>调整后预计每月可增加利润5,000-8,000元</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 border border-yellow-200 rounded-lg bg-yellow-50">
+                                <div class="font-semibold text-yellow-800 mb-2">
+                                    <i class="fas fa-percentage mr-2"></i>建议优化：SKU-102广告投放
+                                </div>
+                                <p class="text-sm text-yellow-700">
+                                    当前广告ROI仅为1.8，低于平台平均3.2，广告费用吞噬了全部利润。建议：
+                                </p>
+                                <ul class="list-disc ml-5 mt-1 text-sm text-yellow-700">
+                                    <li>降低日均预算30%观察效果</li>
+                                    <li>暂停点击率低于1%的关键词</li>
+                                    <li>优化后预计可扭亏为盈，带来月利润约3,500元</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 border border-yellow-200 rounded-lg bg-yellow-50">
+                                <div class="font-semibold text-yellow-800 mb-2">
+                                    <i class="fas fa-box mr-2"></i>建议促销清库存：SKU-078库存积压
+                                </div>
+                                <p class="text-sm text-yellow-700">
+                                    当前库存1,250件，按照当前销量可卖100天，周转天数超标，占用资金25万元，仓储费每月增加成本。建议：
+                                </p>
+                                <ul class="list-disc ml-5 mt-1 text-sm text-yellow-700">
+                                    <li>打折促销清库，目标两个月内清完</li>
+                                    <li>回笼资金可以投入到高毛利周转快的商品</li>
+                                    <li>预计可释放25万流动资金，节省每月仓储费用约1,500元</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 border border-orange-200 rounded-lg bg-orange-50">
+                                <div class="font-semibold text-orange-800 mb-2">
+                                    <i class="fas fa-bullhorn mr-2"></i>建议复盘：618活动SKU-188
+                                </div>
+                                <p class="text-sm text-orange-700">
+                                    活动期间销售880件，但扣除折扣、平台补贴、广告费后净亏损880元，也没有带动其他关联商品明显增长。建议：
+                                </p>
+                                <ul class="list-disc ml-5 mt-1 text-sm text-orange-700">
+                                    <li>复盘活动规则，后续类似活动调整折扣力度</li>
+                                    <li>不建议继续作为引流款亏本赚吆喝</li>
+                                </ul>
+                            </div>
+                            <div class="p-4 border border-orange-200 rounded-lg bg-orange-50">
+                                <div class="font-semibold text-orange-800 mb-2">
+                                    <i class="fas fa-truck mr-2"></i>建议关注：SKU-045退款率
+                                </div>
+                                <p class="text-sm text-orange-700">
+                                    退款率18.6%，显著高于平均值5.2%。退款原因集中在"尺寸不符"和"色差"，建议：
+                                </p>
+                                <ul class="list-disc ml-5 mt-1 text-sm text-orange-700">
+                                    <li>更新详情页尺码表，增加更详细的尺寸参考</li>
+                                    <li>主图增加色差说明</li>
+                                    <li>预估可降低退款率至8%以下，提升利润约1,200元/月</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右侧汇总统计 -->
+                <div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-bold mb-4">按平台利润分布</h2>
+                        <canvas id="platformChart" width="250" height="200"></canvas>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6 mt-6">
+                        <h2 class="text-lg font-bold mb-4">盈利SKU分布</h2>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>盈利SKU</span>
+                                    <span class="font-medium">68个 (72%)</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 72%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>亏损SKU</span>
+                                    <span class="font-medium">26个 (28%)</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-red-500 h-2 rounded-full" style="width: 28%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-3 bg-blue-50 rounded text-sm">
+                            <strong>发现：</strong>Top 10% SKU贡献了85%的利润，符合二八定律
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mt-6">
+                        <h2 class="text-lg font-bold mb-4">异常统计</h2>
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">持续亏损SKU</span>
+                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-sm">1个</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">高销售低毛利</span>
+                                <span class="px-2 py-1 bg-red-100 text-red-800 rounded text-sm">1个</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">广告吞噬利润</span>
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-sm">3个</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">高退款率商品</span>
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-sm">1个</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">库存积压</span>
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-sm">1个</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">活动不盈利</span>
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-sm">1个</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">物流成本异常</span>
+                                <span class="px-2 py-1 bg-orange-100 text-orange-800 rounded text-sm">2个</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between">
+                <button onclick="goToPage('progress')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all">
+                    <i class="fas fa-arrow-left mr-2"></i> 返回进度
+                </button>
+                <button onclick="goToPage('chat')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded-lg transition-all">
+                    进入智能问答 <i class="fas fa-comments ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 智能问答页面 -->
+        <div id="chat" class="page">
+            <h1 class="text-3xl font-bold mb-6 text-gray-900">管理层智能问答</h1>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <div class="lg:col-span-3">
+                    <div class="bg-white rounded-lg shadow mb-4">
+                        <div id="chat-container" class="h-[500px] overflow-y-auto p-4">
+                            <div class="chat-message agent-badge p-3 rounded-lg text-white max-w-[80%]">
+                                <p class="font-semibold mb-1"><i class="fas fa-robot mr-1"></i>利润AI助理</p>
+                                <p>分析已完成，您可以问我任何关于本次利润分析的问题，比如：</p>
+                                <ul class="list-disc ml-4 mt-1">
+                                    <li>今天总体利润情况如何？</li>
+                                    <li>哪些SKU亏损最多？</li>
+                                    <li>A平台和B平台哪个利润率高？</li>
+                                    <li>广告费花得值吗？</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <div class="flex space-x-3">
+                            <input id="question-input" type="text" placeholder="请输入您的问题..." class="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <button onclick="sendQuestion()" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-all">
+                                发送
+                            </button>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm text-gray-500 mb-2">常见问题：</p>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="askQuickQuestion('今天哪个平台利润最高？')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors">
+                                    今天哪个平台利润最高？
+                                </button>
+                                <button onclick="askQuickQuestion('亏损最多的是哪个SKU？')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors">
+                                    亏损最多的是哪个SKU？
+                                </button>
+                                <button onclick="askQuickQuestion('广告投入产出比怎么样？')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors">
+                                    广告投入产出比怎么样？
+                                </button>
+                                <button onclick="askQuickQuestion('哪些SKU库存积压？')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors">
+                                    哪些SKU库存积压？
+                                </button>
+                                <button onclick="askQuickQuestion('这次618活动赚钱了吗？')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors">
+                                    这次618活动赚钱了吗？
+                                </button>
+                                <button onclick="askQuickQuestion('整体利润率环比昨天如何变化？')" class="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm text-gray-700 transition-colors">
+                                    整体利润率环比昨天如何变化？
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-bold mb-4">问答Agent能力</h2>
+                        <ul class="space-y-2 text-sm text-gray-600">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 w-5"></i>
+                                <span>基于当前数据回答，不编造信息</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 w-5"></i>
+                                <span>支持自然语言，不需要特定格式</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 w-5"></i>
+                                <span>自动汇总计算，直接给结论</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 w-5"></i>
+                                <span>结合异常识别结果给出建议</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-4 mt-6">
+                        <h3 class="font-semibold text-blue-900 mb-2">产品设计思路</h3>
+                        <p class="text-sm text-blue-800">
+                            管理层不需要看报表明细，只需要快速得到答案。问答Agent让管理者用自然语言直接问，AI直接给出结论和建议，大大提升决策效率。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-between">
+                <button onclick="goToPage('report')" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-md transition-all">
+                    <i class="fas fa-arrow-left mr-2"></i> 返回报告
+                </button>
+                <button onclick="resetAnalysis()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-8 rounded-lg transition-all">
+                    <i class="fas fa-redo mr-2"></i> 重新分析
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="bg-white border-t mt-12 py-6">
+        <div class="max-w-7xl mx-auto px-4 text-center text-sm text-gray-500">
+            <p>电商利润智能分析平台 - 财务AI产品原型设计</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // 页面切换
+        function goToPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+
+            document.querySelectorAll('.page-indicator').forEach(ind => {
+                ind.classList.remove('bg-blue-100', 'text-blue-700');
+            });
+            document.getElementById(`indicator-${pageId}`).classList.add('bg-blue-100', 'text-blue-700');
+
+            if (pageId === 'report') {
+                setTimeout(drawChart, 100);
+            }
+        }
+
+        // 文件上传模拟
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('file-input');
+        const selectedFiles = document.getElementById('selected-files');
+
+        dropArea.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) {
+                selectedFiles.innerHTML = '';
+                files.forEach(file => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between bg-gray-50 px-3 py-2 rounded';
+                    div.innerHTML = `
+                        <span class="text-sm text-gray-700"><i class="fas fa-file-excel text-green-600 mr-2"></i>${file.name}</span>
+                        <span class="text-xs text-gray-500">${(file.size/1024/1024).toFixed(2)} MB</span>
+                    `;
+                    selectedFiles.appendChild(div);
+                });
+            }
+        }
+
+        // 开始分析动画
+        function startAnalysis() {
+            goToPage('progress');
+
+            const steps = [
+                {step: 1, delay: 800, text: '处理中'},
+                {step: 2, delay: 2500, text: '处理中'},
+                {step: 3, delay: 4000, text: '处理中'},
+                {step: 4, delay: 5200, text: '生成中'},
+                {step: 5, delay: 6500, text: '生成中'},
+            ];
+
+            steps.forEach((s, idx) => {
+                setTimeout(() => {
+                    const stepEl = document.getElementById(`step-${s.step}`);
+                    stepEl.classList.remove('opacity-50');
+                    stepEl.classList.add('opacity-100');
+                    stepEl.querySelector('.w-8').className = 'w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center mr-3';
+                    stepEl.querySelector('span:last-child').textContent = s.text;
+                    stepEl.querySelector('span:last-child').classList.remove('text-gray-500');
+                    stepEl.querySelector('span:last-child').classList.add('text-blue-600');
+
+                    const progress = (s.step / 5) * 100;
+                    document.getElementById('progress-bar').style.width = progress + '%';
+                    document.getElementById('progress-text').textContent = Math.round(progress) + '%';
+
+                    if (s.step === 5) {
+                        setTimeout(() => {
+                            stepEl.querySelector('span:last-child').textContent = '完成';
+                            document.getElementById('completion-box').classList.remove('hidden');
+                            document.getElementById('progress-next-btn').classList.remove('hidden');
+                        }, 800);
+                    }
+                }, s.delay);
+            });
+        }
+
+        // 绘制饼图
+        function drawChart() {
+            const ctx = document.getElementById('platformChart').getContext('2d');
+            if (window.myPie) {
+                window.myPie.destroy();
+            }
+            window.myPie = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['淘宝', '京东',拼多多', '抖音'],
+                    datasets: [{
+                        data: [125000, 83000, 42000, 21406.38],
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444'],
+                    }]
+                },
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        }
+                    }
+                }
+            });
+        }
+
+        // 问答功能
+        const predefinedAnswers = {
+            '今天哪个平台利润最高？': '今天利润最高的是淘宝平台，净利润为125,000元，净利润率25.3%，其次是京东83,000元，抖音虽然绝对值低但利润率最高达到28.7%。',
+            '亏损最多的是哪个SKU？': '亏损最多的是SKU-089，本期亏损12,890元，主要原因是该商品售价无法覆盖成本和广告费用，AI已经建议清退处理。',
+            '广告投入产出比怎么样？': '整体广告ROI为2.8，略低于行业目标3.0。主要问题出在SKU-102，该SKU广告ROI只有1.8，建议降低投放预算。优化后整体ROI预计可提升至3.1。',
+            '哪些SKU库存积压？': '目前检测到SKU-078库存积压，库存1,250件，周转天数超过100天，占用资金25万元，AI已经建议打折清仓回笼资金。',
+            '这次618活动赚钱了吗？': '本次618活动整体来看，总销量不错但整体利润不如预期，其中SKU-188亏损880元，而且没有带动明显的关联销售，建议下次活动调整策略。',
+            '整体利润率环比昨天如何变化？': '今天整体销售净利润率21.56%，昨天为20.12%，环比提升1.44个百分点，主要得益于高毛利商品SKU-035和SKU-078销量提升。'
+        };
+
+        function sendQuestion() {
+            const input = document.getElementById('question-input');
+            const question = input.value.trim();
+            if (!question) return;
+
+            const container = document.getElementById('chat-container');
+
+            // 添加用户问题
+            const userDiv = document.createElement('div');
+            userDiv.className = 'chat-message user-badge p-3 rounded-lg text-white max-w-[80%] ml-auto';
+            userDiv.innerHTML = `<p class="font-semibold mb-1"><i class="fas fa-user mr-1"></i>我</p><p>${question}</p>`;
+            container.appendChild(userDiv);
+
+            input.value = '';
+
+            // 模拟AI回答
+            setTimeout(() => {
+                const answerDiv = document.createElement('div');
+                answerDiv.className = 'chat-message agent-badge p-3 rounded-lg text-white max-w-[80%]';
+                let answer = predefinedAnswers[question] || '基于当前数据分析，您的问题涉及数据暂未在本次分析中体现。请检查问题或重新上传更完整的数据后再试。';
+                answerDiv.innerHTML = `<p class="font-semibold mb-1"><i class="fas fa-robot mr-1"></i>利润AI助理</p><p>${answer}</p>`;
+                container.appendChild(answerDiv);
+                container.scrollTop = container.scrollHeight;
+            }, 600);
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function askQuickQuestion(question) {
+            document.getElementById('question-input').value = question;
+            sendQuestion();
+        }
+
+        // 回车发送
+        document.getElementById('question-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendQuestion();
+            }
+        });
+
+        function resetAnalysis() {
+            goToPage('upload');
+            // 重置进度
+            document.querySelectorAll('[id^="step-"]').forEach((step, idx) => {
+                step.classList.add('opacity-50');
+                step.querySelector('.w-8').className = 'w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-3';
+                step.querySelector('span:last-child').textContent = '等待中';
+                step.querySelector('span:last-child').className = 'text-sm text-gray-500';
+            });
+            document.getElementById('progress-bar').style.width = '0%';
+            document.getElementById('progress-text').textContent = '0%';
+            document.getElementById('completion-box').classList.add('hidden');
+            document.getElementById('progress-next-btn').classList.add('hidden');
+        }
+
+        // 初始化
+        goToPage('home');
+    </script>
+</body>
+</html>
