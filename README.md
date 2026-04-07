@@ -143,6 +143,22 @@
 
 ---
 
+## 🚀 作品集项目列表
+
+### 项目一：电商利润智能分析平台
+基于多Agent AI技术的电商自动化利润核算与经营诊断平台，帮助卖家每日自动获得利润诊断和可执行经营建议。
+
+- 完整PRD：[ecommerce-profit-ai-prd.md](./ecommerce-profit-ai-prd.md)
+- 可交互原型：[ecommerce-profit-ai-prototype.html](./ecommerce-profit-ai-prototype.html)
+
+### 项目二：预算AI智能审批机器人
+基于规则+AI的企业预算自动化审批平台，代替财务完成80%的重复性预算初审工作，自动校验规则、识别风险，只把异常案例交给人工处理。
+
+- 完整PRD：[budget-ai-approval-prd.md](./budget-ai-approval-prd.md)
+- 可交互原型：[budget-ai-approval-prototype.html](./budget-ai-approval-prototype.html)
+
+---
+
 ## 👨‍💼 关于作者
 
 财务专业 → 财务AI产品方向转行，专注"财务+AI"复合型产品设计

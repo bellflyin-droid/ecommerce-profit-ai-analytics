@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预算AI智能审批 - 产品原型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .page { display: none; }
+        .page.active { display: block; }
+        .progress-bar { transition: width 0.8s ease-in-out; }
+        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+        .transition-all { transition: all 0.3s ease; }
+        .progress-step.completed { color: #10b981; }
+        .progress-step.active { color: #3b82f6; }
+        .progress-step.pending { color: #9ca3af; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-sm sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-clipboard-check text-green-600 text-2xl mr-3"></i>
+                    <span class="font-bold text-xl text-gray-900">预算AI智能审批机器人</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-500">财务AI产品原型</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面指示器 -->
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap space-x-1 py-2">
+                <button onclick="goToPage('home')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-home">
+                    <i class="fas fa-home mr-1"></i>首页
+                </button>
+                <button onclick="goToPage('submit')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-submit">
+                    <i class="fas fa-plus-circle mr-1"></i>提交申请
+                </button>
+                <button onclick="goToPage('progress')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-progress">
+                    <i class="fas fa-spinner mr-1"></i>AI审批进度
+                </button>
+                <button onclick="goToPage('result')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-result">
+                    <i class="fas fa-check-circle mr-1"></i>审批结果
+                </button>
+                <button onclick="goToPage('review')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-review">
+                    <i class="fas fa-user-check mr-1"></i>人工复核
+                </button>
+                <button onclick="goToPage('dashboard')" class="page-indicator px-3 py-2 text-sm rounded-md" id="indicator-dashboard">
+                    <i class="fas fa-chart-bar mr-1"></i>预算看板
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 首页 -->
+        <div id="home" class="page active">
+            <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-xl shadow-lg p-8 mb-8 text-white">
+                <h1 class="text-4xl font-bold mb-4">预算AI智能审批机器人</h1>
+                <p class="text-lg opacity-90 mb-6">代替财务完成80%重复性预算初审，只把异常案例交给人工处理</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                        <i class="fas fa-robot text-3xl mb-2"></i>
+                        <h3 class="font-semibold text-lg">多Agent智能分工</h3>
+                        <p class="text-sm opacity-80">从单据解析到给出审批建议，全流程自动化</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                        <i class="fas fa-shield-alt text-3xl mb-2"></i>
+                        <h3 class="font-semibold text-lg">风险智能识别</h3>
+                        <p class="text-sm opacity-80">七种异常风险自动识别，提前预警超预算</p>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur rounded-lg p-4">
+                        <i class="fas fa-bolt text-3xl mb-2"></i>
+                        <h3 class="font-semibold text-lg">提升审批效率</h3>
+                        <p class="text-sm opacity-80">合规申请秒过，财务聚焦例外管理</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900">解决痛点</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <i class="fas fa-times-circle text-red-500 mt-1 mr-3"></i>
+                            <div>
+                                <span class="text-gray-700 font-medium">财务初审工作量大</span>
+                                <p class="text-gray-500 text-sm">每月上百笔申请，逐个核对占用大量时间</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-times-circle text-red-500 mt-1 mr-3"></i>
+                            <div>
+                                <span class="text-gray-700 font-medium">审批效率慢</span>
+                                <p class="text-gray-500 text-sm">申请人等半天，耽误业务进展</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-times-circle text-red-500 mt-1 mr-3"></i>
+                            <div>
+                                <span class="text-gray-700 font-medium">规则执行不一致</span>
+                                <p class="text-gray-500 text-sm">不同财务审核尺度不一，容易引发争议</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-times-circle text-red-500 mt-1 mr-3"></i>
+                            <div>
+                                <span class="text-gray-700 font-medium">超预算发现晚</span>
+                                <p class="text-gray-500 text-sm">累计花超了才发现，调整已经来不及</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900">AI Agent架构</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold mr-3">1</span>
+                            <div>
+                                <span class="text-gray-700 font-medium">单据解析Agent</span>
+                                <p class="text-gray-500 text-sm">智能提取申请信息，结构化输出</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold mr-3">2</span>
+                            <div>
+                                <span class="text-gray-700 font-medium">规则校验Agent</span>
+                                <p class="text-gray-500 text-sm">按配置规则逐条校验合规性</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold mr-3">3</span>
+                            <div>
+                                <span class="text-gray-700 font-medium">风险识别Agent</span>
+                                <p class="text-gray-500 text-sm">识别拆分申请、归类异常等七种风险</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold mr-3">4</span>
+                            <div>
+                                <span class="text-gray-700 font-medium">审批建议Agent</span>
+                                <p class="text-gray-500 text-sm">给出明确结论和可追溯依据</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold mr-3">5</span>
+                            <div>
+                                <span class="text-gray-700 font-medium">人工分流Agent</span>
+                                <p class="text-gray-500 text-sm">自动通过/打回/转人工，智能分流</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button onclick="goToPage('submit')" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all card-hover">
+                            <i class="fas fa-play mr-2"></i>开始体验原型
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-2xl font-bold mb-4 text-gray-900">支持审批场景</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div class="border border-gray-200 rounded-lg p-4 card-hover transition-all">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            <span class="font-semibold text-gray-900">自动通过</span>
+                        </div>
+                        <p class="text-sm text-gray-600">合规申请秒过，不占财务时间</p>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4 card-hover transition-all">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-times-circle text-red-500 mr-2"></i>
+                            <span class="font-semibold text-gray-900">自动打回</span>
+                        </div>
+                        <p class="text-sm text-gray-600">明确违规直接打回，说明原因</p>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4 card-hover transition-all">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-user-shield text-yellow-500 mr-2"></i>
+                            <span class="font-semibold text-gray-900">人工复核</span>
+                        </div>
+                        <p class="text-sm text-gray-600">疑点案例转给人工，AI给出建议</p>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4 card-hover transition-all">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+                            <span class="font-semibold text-gray-900">超预算预警</span>
+                        </div>
+                        <p class="text-sm text-gray-600">提前提醒接近预算红线</p>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4 card-hover transition-all">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-bug text-red-500 mr-2"></i>
+                            <span class="font-semibold text-gray-900">拆分申请识别</span>
+                        </div>
+                        <p class="text-sm text-gray-600">识别化整为零绕开审批上限</p>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg p-4 card-hover transition-all">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-chart-pie text-blue-500 mr-2"></i>
+                            <span class="font-semibold text-gray-900">预算执行看板</span>
+                        </div>
+                        <p class="text-sm text-gray-600">全局监控各部门预算使用进度</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 提交申请页 -->
+        <div id="submit" class="page">
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 class="text-2xl font-bold mb-4 text-gray-900">
+                        <i class="fas fa-plus-circle text-green-600 mr-2"></i>提交预算申请
+                    </h2>
+                    <p class="text-gray-600 mb-6">填写申请信息，AI将自动完成审批</p>
+
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">申请部门 *</label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500">
+                                <option>市场部</option>
+                                <option>销售部</option>
+                                <option>研发部</option>
+                                <option>行政部</option>
+                                <option>人力资源部</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">申请人 *</label>
+                            <input type="text" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入姓名" value="张三">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">费用类别 *</label>
+                            <select class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" id="expenseType">
+                                <option>市场推广费</option>
+                                <option>办公费</option>
+                                <option>差旅费</option>
+                                <option>业务招待费</option>
+                                <option>会议费</option>
+                                <option>设备采购</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">申请金额（元）*</label>
+                            <input type="number" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" placeholder="请输入金额" value="8,500" id="amount">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">申请事项说明 *</label>
+                            <textarea class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 rows-3" placeholder="请详细说明申请用途" rows="3">二季度Google广告投放费用</textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">附件上传</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-md px-6 py-8 text-center hover:border-green-500 transition-all">
+                                <i class="fas fa-cloud-upload-alt text-gray-400 text-4xl mb-2"></i>
+                                <p class="text-sm text-gray-500">拖拽文件到此处 或 点击上传（报价单、合同等）</p>
+                                <input type="file" class="hidden" id="file-upload">
+                                <button type="button" class="mt-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 text-sm" onclick="document.getElementById('file-upload').click()">选择文件</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 border border-blue-200 rounded-md p-4">
+                            <div class="flex">
+                                <i class="fas fa-info-circle text-blue-500 mt-1 mr-3"></i>
+                                <div>
+                                    <p class="text-sm text-blue-800">AI会自动解析您填写的信息，按照公司预算规则完成初审。合规申请将自动通过。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="button" onclick="goToPage('progress')" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all card-hover">
+                                <i class="fas fa-paper-plane mr-2"></i>提交申请，开始AI审批
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="font-bold text-lg mb-3 text-gray-900">快速体验不同场景</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <button onclick="loadSample('auto-approve')" class="border border-green-200 bg-green-50 hover:bg-green-100 rounded-lg p-3 text-left transition-all">
+                            <i class="fas fa-check-circle text-green-600 mb-1 block text-lg"></i>
+                            <span class="font-medium text-gray-900 text-sm">场景1：自动通过</span>
+                            <p class="text-xs text-gray-600">合规申请，直接通过+预警</p>
+                        </button>
+                        <button onclick="loadSample('needs-review')" class="border border-yellow-200 bg-yellow-50 hover:bg-yellow-100 rounded-lg p-3 text-left transition-all">
+                            <i class="fas fa-user-check text-yellow-600 mb-1 block text-lg"></i>
+                            <span class="font-medium text-gray-900 text-sm">场景2：需要人工复核</span>
+                            <p class="text-xs text-gray-600">接近预算红线，转人工</p>
+                        </button>
+                        <button onclick="loadSample('reject')" class="border border-red-200 bg-red-50 hover:bg-red-100 rounded-lg p-3 text-left transition-all">
+                            <i class="fas fa-times-circle text-red-600 mb-1 block text-lg"></i>
+                            <span class="font-medium text-gray-900 text-sm">场景3：自动打回</span>
+                            <p class="text-xs text-gray-600">超预算，直接打回</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI审批进度页 -->
+        <div id="progress" class="page">
+            <div class="max-w-2xl mx-auto">
+                <div class="bg-white rounded-lg shadow p-8">
+                    <h2 class="text-2xl font-bold mb-6 text-gray-900 text-center">
+                        <i class="fas fa-spinner fa-spin text-green-600 mr-2"></i>AI正在审批中...
+                    </h2>
+
+                    <div class="mb-6">
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            <div id="progress-bar" class="progress-bar bg-green-500 h-2.5 rounded-full w-0"></div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="flex items-center progress-step" id="step-1">
+                            <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center mr-4">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">单据解析Agent 处理中</p>
+                                <p class="text-sm text-gray-500">提取申请信息，结构化处理</p>
+                            </div>
+                            <span class="text-sm"><i class="fas fa-clock"></i> 进行中</span>
+                        </div>
+
+                        <div class="flex items-center progress-step pending" id="step-2">
+                            <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center mr-4">
+                                <i class="fas fa-check-square"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">规则校验Agent</p>
+                                <p class="text-sm text-gray-500">按预算规则逐条校验</p>
+                            </div>
+                            <span class="text-sm">等待中</span>
+                        </div>
+
+                        <div class="flex items-center progress-step pending" id="step-3">
+                            <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center mr-4">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">风险识别Agent</p>
+                                <p class="text-sm text-gray-500">识别异常风险点</p>
+                            </div>
+                            <span class="text-sm">等待中</span>
+                        </div>
+
+                        <div class="flex items-center progress-step pending" id="step-4">
+                            <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center mr-4">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">审批建议Agent</p>
+                                <p class="text-sm text-gray-500">生成审批结论和依据</p>
+                            </div>
+                            <span class="text-sm">等待中</span>
+                        </div>
+
+                        <div class="flex items-center progress-step pending" id="step-5">
+                            <div class="w-8 h-8 rounded-full border-2 flex items-center justify-center mr-4">
+                                <i class="fas fa-random"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900">人工分流Agent</p>
+                                <p class="text-sm text-gray-500">智能分流到对应处理队列</p>
+                            </div>
+                            <span class="text-sm">等待中</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 审批结果页 -->
+        <div id="result" class="page">
+            <div class="max-w-4xl mx-auto">
+                <div id="result-auto-approve" class="result-content">
+                    <div class="bg-green-50 border-2 border-green-200 rounded-xl shadow p-8 mb-6 text-center">
+                        <i class="fas fa-check-circle text-green-600 text-6xl mb-4"></i>
+                        <h2 class="text-3xl font-bold mb-2 text-green-900">AI审批已通过</h2>
+                        <p class="text-green-700 mb-0">您的预算申请符合各项规则，已自动审批通过</p>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">申请信息</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-500">申请部门：</span>
+                                <span class="text-gray-900 font-medium">市场部</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">申请人：</span>
+                                <span class="text-gray-900 font-medium">张三</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">费用类别：</span>
+                                <span class="text-gray-900 font-medium">市场推广费</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">申请金额：</span>
+                                <span class="text-gray-900 font-medium">¥8,500.00</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">申请事项：</span>
+                                <span class="text-gray-900 font-medium">二季度Google广告投放费用</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">审批时间：</span>
+                                <span class="text-gray-900 font-medium">2025-04-07 10:30</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">AI审批明细</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">部门预算额度校验</span>
+                                <span class="text-green-600 font-medium">通过</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">单笔金额上限校验</span>
+                                <span class="text-green-600 font-medium">通过</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">费用类别合规校验</span>
+                                <span class="text-green-600 font-medium">通过</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">预算项目归属校验</span>
+                                <span class="text-green-600 font-medium">通过</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-exclamation-triangle text-yellow-600 mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-semibold text-yellow-900 mb-1">预算预警提示</h4>
+                                <p class="text-yellow-800 text-sm">本次申请通过后，市场部年度预算使用率已达 <strong>92.5%</strong>，接近90%预警线，请后续申请注意控制。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">AI结论</h3>
+                        <div class="bg-gray-50 rounded-lg p-4">
+                            <p class="text-gray-700 italic">
+                                "张三申请二季度Google广告投放费用金额8,500.00元，市场部年度预算50万，已使用45.4万，本次申请后剩余3.75万，使用率92.5%，符合各项审批规则，AI建议自动通过。温馨提示：已接近预算红线，请后续申请注意控制。"
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="result-needs-review" class="result-content hidden">
+                    <div class="bg-yellow-50 border-2 border-yellow-200 rounded-xl shadow p-8 mb-6 text-center">
+                        <i class="fas fa-user-check text-yellow-600 text-6xl mb-4"></i>
+                        <h2 class="text-3xl font-bold mb-2 text-yellow-900">需要人工复核</h2>
+                        <p class="text-yellow-700 mb-0">AI识别到风险疑点，已转入人工复核队列</p>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">申请信息</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-500">申请部门：</span>
+                                <span class="text-gray-900 font-medium">销售部</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">申请人：</span>
+                                <span class="text-gray-900 font-medium">李四</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">费用类别：</span>
+                                <span class="text-gray-900 font-medium">业务招待费</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">申请金额：</span>
+                                <span class="text-gray-900 font-medium">¥9,800.00</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">申请事项：</span>
+                                <span class="text-gray-900 font-medium">重要客户招待</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">业务招待费单笔上限：</span>
+                                <span class="text-gray-900 font-medium">¥10,000.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">风险识别结果</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center bg-yellow-50 p-3 rounded">
+                                <i class="fas fa-exclamation-triangle text-yellow-600 mr-3"></i>
+                                <span class="flex-1 text-gray-700">接近预算红线</span>
+                                <span class="text-yellow-700 font-medium">中风险</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">拆分申请避审</span>
+                                <span class="text-green-600 font-medium">无异常</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">费用归类异常</span>
+                                <span class="text-green-600 font-medium">无异常</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">申请频率异常</span>
+                                <span class="text-green-600 font-medium">无异常</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-lightbulb text-blue-600 mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-semibold text-blue-900 mb-1">AI审批建议</h4>
+                                <p class="text-blue-800 text-sm">本次申请金额9,800元，已非常接近业务招待费单笔10,000元上限，存在"金额凑整异常"风险，疑点为疑似拆分大额申请规避审批，建议人工复核确认。AI初步建议：<strong>补充说明后通过</strong>。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="result-reject" class="result-content hidden">
+                    <div class="bg-red-50 border-2 border-red-200 rounded-xl shadow p-8 mb-6 text-center">
+                        <i class="fas fa-times-circle text-red-600 text-6xl mb-4"></i>
+                        <h2 class="text-3xl font-bold mb-2 text-red-900">AI审批未通过</h2>
+                        <p class="text-red-700 mb-0">您的预算申请不符合审批规则，已自动打回</p>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">申请信息</h3>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-500">申请部门：</span>
+                                <span class="text-gray-900 font-medium">研发部</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">申请人：</span>
+                                <span class="text-gray-900 font-medium">王五</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">费用类别：</span>
+                                <span class="text-gray-900 font-medium">设备采购</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">申请金额：</span>
+                                <span class="text-gray-900 font-medium">¥68,000.00</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">申请事项：</span>
+                                <span class="text-gray-900 font-medium">新服务器采购</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">部门年度预算剩余：</span>
+                                <span class="text-gray-900 font-medium">¥45,000.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-4 text-gray-900">规则校验结果</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center bg-red-50 p-3 rounded">
+                                <i class="fas fa-times-circle text-red-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">部门预算额度校验</span>
+                                <span class="text-red-600 font-medium">不通过</span>
+                            </div>
+                            <div class="flex items-center bg-red-50 p-3 rounded">
+                                <i class="fas fa-times-circle text-red-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">超部门总预算</span>
+                                <span class="text-red-600 font-medium">高风险</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">单笔金额上限校验</span>
+                                <span class="text-green-600 font-medium">通过</span>
+                            </div>
+                            <div class="flex items-center">
+                                <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                                <span class="flex-1 text-gray-700">费用类别合规校验</span>
+                                <span class="text-green-600 font-medium">通过</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                        <div class="flex items-start">
+                            <i class="fas fa-info-circle text-red-600 mt-1 mr-3 text-xl"></i>
+                            <div>
+                                <h4 class="font-semibold text-red-900 mb-1">AI打回原因</h4>
+                                <p class="text-red-800 text-sm">研发部本年度设备采购预算剩余45,000元，本次申请金额68,000元，申请金额超出剩余预算23,000元，不符合"超预算申请不予通过"规则。建议：1) 调整采购方案降本 2) 申请追加预算 3) 改从其他部门预算列支。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex space-x-4">
+                    <button onclick="goToPage('dashboard')" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all card-hover">
+                        <i class="fas fa-chart-bar mr-2"></i>查看预算看板
+                    </button>
+                    <button onclick="goToPage('review')" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-all card-hover">
+                        <i class="fas fa-user-check mr-2"></i>查看人工复核页
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 人工复核页 -->
+        <div id="review" class="page">
+            <div class="max-w-5xl mx-auto">
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-2xl font-bold text-gray-900">
+                            <i class="fas fa-user-check text-yellow-600 mr-2"></i>人工复核
+                        </h2>
+                        <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold">待复核</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-lg font-bold mb-3 text-gray-900">申请单据信息</h3>
+                            <div class="border rounded-lg divide-y">
+                                <div class="grid grid-cols-3 px-4 py-3">
+                                    <span class="text-gray-500 text-sm">申请单号</span>
+                                    <span class="col-span-2 text-gray-900 font-medium">REQ20250407001</span>
+                                </div>
+                                <div class="grid grid-cols-3 px-4 py-3">
+                                    <span class="text-gray-500 text-sm">申请部门</span>
+                                    <span class="col-span-2 text-gray-900 font-medium">销售部</span>
+                                </div>
+                                <div class="grid grid-cols-3 px-4 py-3">
+                                    <span class="text-gray-500 text-sm">申请人</span>
+                                    <span class="col-span-2 text-gray-900 font-medium">李四</span>
+                                </div>
+                                <div class="grid grid-cols-3 px-4 py-3">
+                                    <span class="text-gray-500 text-sm">申请时间</span>
+                                    <span class="col-span-2 text-gray-900 font-medium">2025-04-07 10:15</span>
+                                </div>
+                                <div class="grid grid-cols-3 px-4 py-3">
+                                    <span class="text-gray-500 text-sm">费用类别</span>
+                                    <span class="col-span-2 text-gray-900 font-medium">业务招待费</span>
+                                </div>
+                                <div class="grid grid-cols-3 px-4 py-3">
+                                    <span class="text-gray-500 text-sm">申请金额</span>
+                                    <span class="col-span-2 text-gray-900 font-medium">¥9,800.00</span>
+                                </div>
+                                <div class="grid grid-cols-3 px-4 py-3">
+                                    <span class="text-gray-500 text-sm">申请事项</span>
+                                    <span class="col-span-2 text-gray-900 font-medium">重要客户招待</span>
+                                </div>
+                                <div class="grid grid-cols-3 px-4 py-3">
+                                    <span class="text-gray-500 text-sm">附件</span>
+                                    <span class="col-span-2 text-gray-900 font-medium">
+                                        <i class="fas fa-paperclip mr-1"></i>招待申请单.pdf
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-bold mb-3 text-gray-900">AI分析报告（供复核参考）</h3>
+
+                            <div class="border rounded-lg divide-y">
+                                <div class="px-4 py-3">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">合规性得分：<span class="text-xl text-yellow-600 font-bold">72/100</span></p>
+                                </div>
+                                <div class="px-4 py-3">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">识别疑点：</p>
+                                    <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                        <li>申请金额9,800元，非常接近单笔10,000元上限</li>
+                                        <li>金额凑整异常，疑似拆分大额申请规避审批</li>
+                                    </ul>
+                                </div>
+                                <div class="px-4 py-3">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">部门预算情况：</p>
+                                    <p class="text-sm text-gray-600">销售部年度业务招待费预算：15万<br>已使用：12.8万<br>本次申请后剩余：1.3万<br>使用率：<span class="text-yellow-600 font-semibold">91.3%</span></p>
+                                </div>
+                                <div class="px-4 py-3 bg-yellow-50">
+                                    <p class="text-sm font-medium text-yellow-800 mb-1">AI建议：</p>
+                                    <p class="text-sm text-yellow-900">建议人工复核，确认本次招待事项真实性，以及是否确实为单笔而非拆分。如果真实合理，可以批准。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-6 border-t">
+                        <h3 class="text-lg font-bold mb-3 text-gray-900">财务最终审批</h3>
+                        <div class="flex space-x-4">
+                            <button class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all card-hover">
+                                <i class="fas fa-check mr-2"></i>同意通过
+                            </button>
+                            <button class="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg transition-all card-hover">
+                                <i class="fas fa-times mr-2"></i>打回申请
+                            </button>
+                        </div>
+                        <div class="mt-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">审批意见</label>
+                            <textarea class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500" rows="3" placeholder="请填写审批意见（可选）"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 预算看板页 -->
+        <div id="dashboard" class="page">
+            <div class="bg-white rounded-lg shadow p-6 mb-6">
+                <h2 class="text-2xl font-bold mb-6 text-gray-900">
+                    <i class="fas fa-chart-bar text-green-600 mr-2"></i>预算执行看板
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <p class="text-blue-600 text-sm font-medium mb-1">本月申请笔数</p>
+                        <p class="text-3xl font-bold text-blue-900">128</p>
+                        <p class="text-xs text-blue-700 mt-1">较上月 +12.3%</p>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <p class="text-green-600 text-sm font-medium mb-1">AI自动通过</p>
+                        <p class="text-3xl font-bold text-green-900">103</p>
+                        <p class="text-xs text-green-700 mt-1">占比 80.5%</p>
+                    </div>
+                    <div class="bg-yellow-50 rounded-lg p-4">
+                        <p class="text-yellow-600 text-sm font-medium mb-1">待人工复核</p>
+                        <p class="text-3xl font-bold text-yellow-900">16</p>
+                        <p class="text-xs text-yellow-700 mt-1">占比 12.5%</p>
+                    </div>
+                    <div class="bg-red-50 rounded-lg p-4">
+                        <p class="text-red-600 text-sm font-medium mb-1">自动打回</p>
+                        <p class="text-3xl font-bold text-red-900">9</p>
+                        <p class="text-xs text-red-700 mt-1">占比 7.0%</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold mb-4 text-gray-900">各部门预算使用率</h3>
+                        <canvas id="budgetChart" height="250"></canvas>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold mb-4 text-gray-900">本月AI审批效率</h3>
+                        <canvas id="pieChart" height="250"></canvas>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold mb-4 text-gray-900">各部门预算预警状态</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">部门</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">年度预算</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">已使用</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">剩余</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">使用率</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">市场部</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥500,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥462,500.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥37,500.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 92.5%"></div>
+                                        </div>
+                                        <span class="text-xs text-yellow-600 font-medium">92.5%</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">预警</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">销售部</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥300,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥243,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥57,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 81%"></div>
+                                        </div>
+                                        <span class="text-xs text-yellow-600 font-medium">81.0%</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">关注</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">研发部</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥800,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥785,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥15,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-red-500 h-2.5 rounded-full" style="width: 98.1%"></div>
+                                        </div>
+                                        <span class="text-xs text-red-600 font-medium">98.1%</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">超预算</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">行政部</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥150,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥82,500.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥67,500.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-green-500 h-2.5 rounded-full" style="width: 55%"></div>
+                                        </div>
+                                        <span class="text-xs text-green-600 font-medium">55.0%</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">人力资源部</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥200,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥124,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">¥76,000.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                            <div class="bg-green-500 h-2.5 rounded-full" style="width: 62%"></div>
+                                        </div>
+                                        <span class="text-xs text-green-600 font-medium">62.0%</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">正常</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-bold mb-4 text-gray-900">AI效率提升统计</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="border rounded-lg p-4">
+                        <div class="text-3xl font-bold text-green-600 mb-1">80.5%</div>
+                        <p class="text-sm text-gray-600">申请自动处理比例</p>
+                        <p class="text-xs text-gray-500 mt-1">财务只需要处理不到20%的疑点案例</p>
+                    </div>
+                    <div class="border rounded-lg p-4">
+                        <div class="text-3xl font-bold text-green-600 mb-1">10秒</div>
+                        <p class="text-sm text-gray-600">平均AI审批时间</p>
+                        <p class="text-xs text-gray-500 mt-1">原来人工审批平均需要4小时</p>
+                    </div>
+                    <div class="border rounded-lg p-4">
+                        <div class="text-3xl font-bold text-green-600 mb-1">3.5小时/月</div>
+                        <p class="text-sm text-gray-600">节省财务工作量</p>
+                        <p class="text-xs text-gray-500 mt-1">按每月128笔申请计算</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // 页面导航
+        function goToPage(pageId) {
+            // 隐藏所有页面
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            // 显示目标页面
+            document.getElementById(pageId).classList.add('active');
+
+            // 更新指示器样式
+            document.querySelectorAll('.page-indicator').forEach(indicator => {
+                indicator.classList.remove('bg-gray-200');
+            });
+            document.getElementById('indicator-' + pageId).classList.add('bg-gray-200');
+
+            // 如果进入进度页，开始动画
+            if (pageId === 'progress') {
+                startProgressAnimation();
+            }
+        }
+
+        // 加载不同场景
+        function loadSample(type) {
+            // 先到进度页
+            goToPage('progress');
+            // 动画完成后显示对应结果
+            setTimeout(() => {
+                goToPage('result');
+                // 隐藏所有结果
+                document.querySelectorAll('.result-content').forEach(el => el.classList.add('hidden'));
+                // 显示对应结果
+                if (type === 'auto-approve') {
+                    document.getElementById('result-auto-approve').classList.remove('hidden');
+                } else if (type === 'needs-review') {
+                    document.getElementById('result-needs-review').classList.remove('hidden');
+                } else if (type === 'reject') {
+                    document.getElementById('result-reject').classList.remove('hidden');
+                }
+            }, 2500);
+        }
+
+        // 进度动画
+        function startProgressAnimation() {
+            const steps = ['step-1', 'step-2', 'step-3', 'step-4', 'step-5'];
+            const progressBar = document.getElementById('progress-bar');
+            let currentStep = 0;
+
+            function completeStep() {
+                if (currentStep < steps.length) {
+                    const step = document.getElementById(steps[currentStep]);
+                    step.classList.add('completed');
+                    step.classList.remove('pending', 'active');
+                    step.querySelector('i').className = 'fas fa-check';
+
+                    if (currentStep + 1 < steps.length) {
+                        const nextStep = document.getElementById(steps[currentStep + 1]);
+                        nextStep.classList.add('active');
+                        nextStep.classList.remove('pending');
+                    }
+
+                    const progress = ((currentStep + 1) / steps.length) * 100;
+                    progressBar.style.width = progress + '%';
+
+                    currentStep++;
+
+                    if (currentStep < steps.length) {
+                        setTimeout(completeStep, 500);
+                    } else {
+                        // 所有步骤完成，跳转结果页（默认自动通过场景）
+                        setTimeout(() => {
+                            goToPage('result');
+                        }, 800);
+                    }
+                }
+            }
+
+            // 初始化
+            steps.forEach((stepId, index) => {
+                const step = document.getElementById(stepId);
+                if (index === 0) {
+                    step.classList.add('active');
+                    step.classList.remove('pending');
+                } else {
+                    step.classList.add('pending');
+                }
+            });
+            progressBar.style.width = '0%';
+
+            setTimeout(completeStep, 300);
+        }
+
+        // 初始化指示器样式
+        document.getElementById('indicator-home').classList.add('bg-gray-200');
+
+        // 图表初始化
+        window.onload = function() {
+            // 预算使用率柱状图
+            const budgetCtx = document.getElementById('budgetChart').getContext('2d');
+            new Chart(budgetCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['研发部', '市场部', '销售部', '人力资源', '行政部'],
+                    datasets: [{
+                        label: '预算使用率 %',
+                        data: [98.1, 92.5, 81.0, 62.0, 55.0],
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(245, 158, 11, 0.6)',
+                            'rgba(16, 185, 129, 0.6)',
+                            'rgba(16, 185, 129, 0.6)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // 审批占比饼图
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            new Chart(pieCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['自动通过', '待人工复核', '自动打回'],
+                    datasets: [{
+                        data: [80.5, 12.5, 7.0],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        };
+    </script>
+</body>
+</html>
