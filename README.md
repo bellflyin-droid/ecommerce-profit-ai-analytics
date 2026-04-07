@@ -2,12 +2,6 @@
 
 ## 📖 项目简介
 
-<div align="center">
-  <img src="https://img.shields.io/badge/Product%20Design-Finance%20AI-blue.svg" alt="Product Design">
-  <img src="https://img.shields.io/badge/Multi-Agent-Architecture-green.svg" alt="Multi-Agent">
-  <img src="https://img.shields.io/badge/E-commerce-Profit%20Analytics-orange.svg" alt="E-commerce">
-</div>
-
 本项目是一个**基于多Agent AI技术的电商自动化利润核算与经营诊断平台**产品设计。
 
 针对多平台电商卖家「人工核算慢、异常发现晚、只算账不给方案」的痛点，设计了全流程自动化的AI分析系统，帮助卖家每日自动获得利润诊断和可执行经营建议。
